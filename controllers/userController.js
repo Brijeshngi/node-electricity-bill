@@ -169,5 +169,3 @@ export const deleteprofile = async (req, res, next) => {
     message: "Profile deleted successfully",
   });
 };
-
-// Error: Can't set headers after they are sent to the client use of res for double time
