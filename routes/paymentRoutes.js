@@ -2,12 +2,17 @@ import express from "express";
 import {
   buySubscription,
   cancelSubscription,
+  checkout,
   getRazorpayKey,
+  orderVerification,
   paymentVerification,
 } from "../controllers/paymentController.js";
 import { isAuthenticated } from "../middleware/auth.js";
 
 const router = express.Router();
+
+router.route("/pay").post(checkout);
+router.route("/verification").post(orderVerification);
 
 router.route("/subscribe").get(isAuthenticated, buySubscription);
 
