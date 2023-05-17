@@ -2,15 +2,17 @@ import moment from "moment";
 import mongoose from "mongoose";
 
 const schema = mongoose.Schema({
+  cust_name: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
   device_number: {
     type: String,
   },
+  bill_number: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
   bill_amount: {
     type: String,
-  },
-  due_date: {
-    type: Date,
-    Date: Date.now() + 15 * 60 * 60 * 1000,
   },
   invoice_date: {
     type: Date,

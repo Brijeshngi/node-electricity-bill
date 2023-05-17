@@ -8,8 +8,9 @@ const schema = new mongoose.Schema({
     {
       currentreadingunits: { type: Array },
       previousredingunits: { type: Array },
+      units: { type: Array },
+      date: Date,
     },
   ],
-  units: [{ type: Array }],
 });
 export const Device = mongoose.model("Device", schema);

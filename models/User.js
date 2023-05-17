@@ -13,7 +13,6 @@ const schema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please enter Email"],
-    unique: true,
     validate: validator.isEmail,
   },
   contact: {
@@ -38,13 +37,17 @@ const schema = new mongoose.Schema({
     default: "domestic",
   },
   device_information: {
-    type: String,
     device: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "device",
     },
-    default: 15454,
   },
+  billing: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      status: String,
+    },
+  ],
   subscription: {
     id: String,
     status: String,
