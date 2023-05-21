@@ -45,7 +45,39 @@ export const buySubscription = async (req, res, next) => {
   });
 };
 
-export const paymentVerification = async (req, res, next) => {
+export const paymentVerification = async (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+    req.body;
+
+  const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+  const expectedSignature = crypto
+    .createHmac("sha256", process.env.RAZORPAY_APT_SECRET)
+    .update(body.toString())
+    .digest("hex");
+
+  const isAuthentic = expectedSignature === razorpay_signature;
+
+  if (isAuthentic) {
+    // Database comes here
+
+    await Payment.create({
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+    });
+
+    res.redirect(
+      `http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`
+    );
+  } else {
+    res.status(400).json({
+      success: false,
+    });
+  }
+};
+
+export const paymentVerifications = async (req, res, next) => {
   const { razorpay_signature, razorpay_payment_id, razorpay_subscription_id } =
     req.body;
 
@@ -116,13 +148,6 @@ export const orderVerification = async (req, res) => {
   }
 };
 
-export const getRazorpayKey = async (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    key: process.env.RAZORPAY_API_KEY,
-  });
-};
-
 export const cancelSubscription = async (req, res, next) => {
   const user = await User.findById(req.user._id);
 
@@ -158,5 +183,12 @@ export const cancelSubscription = async (req, res, next) => {
     message: refund
       ? "subscription cancelled, refund in 24 hours"
       : " subscription cancel request accepted, but unfortunate no refund will be done",
+  });
+};
+
+export const getRazorpayKey = async (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    key: process.env.RAZORPAY_API_KEY,
   });
 };
