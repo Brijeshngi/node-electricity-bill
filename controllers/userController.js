@@ -159,6 +159,7 @@ export const resetpassword = async (req, res, next) => {
     message: "password Changed successfully",
   });
 };
+
 export const deleteprofile = async (req, res, next) => {
   const user = await findById(req.user._id);
 

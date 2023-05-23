@@ -46,6 +46,11 @@ export const buySubscription = async (req, res, next) => {
 };
 
 export const paymentVerification = async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user.role === "admin")
+    return next(new ErrorHandler("Admin can't buy subscription", 409));
+
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
     req.body;
 
@@ -67,6 +72,10 @@ export const paymentVerification = async (req, res) => {
       razorpay_signature,
     });
 
+    user.subscription.status = "active";
+
+    await user.save();
+
     res.redirect(
       `http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`
     );
@@ -77,6 +86,7 @@ export const paymentVerification = async (req, res) => {
   }
 };
 
+// for subscription
 export const paymentVerifications = async (req, res, next) => {
   const { razorpay_signature, razorpay_payment_id, razorpay_subscription_id } =
     req.body;
@@ -166,7 +176,7 @@ export const cancelSubscription = async (req, res, next) => {
   const refundDays = process.env.REFUND_DAYS * 24 * 60 * 60 * 1000;
 
   if (refundDays > numOfDays) {
-    await instance.payments.refund(payment.razorpay_payment_id);
+    instance.payments.refund(payment.razorpay_payment_id);
 
     refund = true;
   }
