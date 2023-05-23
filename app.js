@@ -18,18 +18,19 @@ app.use(
 );
 app.use(cors());
 app.use(cookieParser());
+
 // importing and using routes
-import payment from "./routes/paymentRoutes.js";
 import user from "./routes/userRoutes.js";
-import complaint from "./routes/complaintRoutes.js";
 import device from "./routes/deviceRoutes.js";
+import payment from "./routes/paymentRoutes.js";
 import invoice from "./routes/invoiceRoutes.js";
+import complaint from "./routes/complaintRoutes.js";
 
 app.use("/api/v1", user);
 app.use("/api/v1", device);
-app.use("/api/v1", complaint);
-app.use("/api/v1", invoice);
 app.use("/api/v1", payment);
+app.use("/api/v1", invoice);
+app.use("/api/v1", complaint);
 
 export default app;
 
